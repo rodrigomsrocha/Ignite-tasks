@@ -3,6 +3,7 @@ import { useState } from "react";
 import "../styles/tasklist.scss";
 
 import { FiTrash, FiCheckSquare } from "react-icons/fi";
+import toast from "react-hot-toast";
 
 interface Task {
   id: number;
@@ -16,13 +17,17 @@ export function TaskList() {
 
   function handleCreateNewTask() {
     // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
-    if (!newTaskTitle) return;
+    if (!newTaskTitle) {
+      toast.error("Task deve ter um titulo");
+      return;
+    }
     const newTask = {
       id: Math.floor(Math.random() * 100) + 1,
       title: newTaskTitle,
       isComplete: false,
     };
     setTasks([...tasks, newTask]);
+    toast.success("Task criada");
   }
 
   function handleToggleTaskCompletion(id: number) {
@@ -36,12 +41,16 @@ export function TaskList() {
         : task
     );
     setTasks(newTasks);
+    toast.success("Task atualizada");
   }
 
   function handleRemoveTask(id: number) {
     // Remova uma task da listagem pelo ID
     const filteredTasks = tasks.filter((task) => task.id !== id);
     setTasks(filteredTasks);
+    toast("Task deletada", {
+      icon: "🗑",
+    });
   }
 
   return (
